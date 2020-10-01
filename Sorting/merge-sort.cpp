@@ -1,44 +1,77 @@
-#include <bits/stdc++.h>
-using namespace std;
+#include <stdio.h>
 
-void merge(vector<int>& v, int lo, int mid, int hi) {
-	vector<int> v1(v.begin()+lo,v.begin()+mid+1);
-	vector<int> v2(v.begin()+mid+1,v.begin()+hi+1);
-	int n1 = mid-lo+1;
-	int n2 = hi-mid;
-	int i,j,k;
-	i=j=0;
-	k=lo;
-	// merge two sorted arrays
-	while(i < n1 && j < n2) {
-		if(v1[i] < v2[j])
-			v[k++] = v1[i++];
-		else
-			v[k++] = v2[j++];
-	}
-	while(i < n1)
-		v[k++] = v1[i++];
-	while(j < n2)
-		v[k++] = v2[j++];
+
+void mergeSort(int a[], int p, int r)
+{
+    int q;
+    if(p < r)
+    {
+        q = (p + r) / 2;
+        mergeSort(a, p, q);
+        mergeSort(a, q+1, r);
+        merge(a, p, q, r);
+    }
 }
 
-void msort(vector<int>& v, int lo, int hi) {
-	if(lo < hi) {
-		int m = lo+(hi-lo)/2;
-		msort(v,lo,m);
-		msort(v,m+1,hi);
-		merge(v,lo,m,hi);
-	}
-	return;
+// function to merge the subarrays
+void merge(int a[], int p, int q, int r)
+{
+    int b[5];   //same size of a[]
+    int i, j, k;
+    k = 0;
+    i = p;
+    j = q + 1;
+    while(i <= q && j <= r)
+    {
+        if(a[i] < a[j])
+        {
+            b[k++] = a[i++];    // same as b[k]=a[i]; k++; i++;
+        }
+        else
+        {
+            b[k++] = a[j++];
+        }
+    }
+  
+    while(i <= q)
+    {
+        b[k++] = a[i++];
+    }
+  
+    while(j <= r)
+    {
+        b[k++] = a[j++];
+    }
+  
+    for(i=r; i >= p; i--)
+    {
+        a[i] = b[--k];  // copying back the sorted list to a[]
+    } 
 }
 
-int main() {
-	vector<int> v;
-	int k = 1e5;
-	while(k--)
-		v.push_back(rand()%INT_MAX);
-	msort(v,0,v.size()-1);
-	for(int i:v)
-		cout << i << " ";
-	cout << endl;
+// function to print the array
+void printArray(int a[], int size)
+{
+    int i;
+    for (i=0; i < size; i++)
+    {
+        printf("%d ", a[i]);
+    }
+    printf("\n");
+}
+ 
+int main()
+{
+    int arr[] = {32, 45, 67, 2, 7};
+    int len = sizeof(arr)/sizeof(arr[0]);
+ 
+    printf("Given array: \n");
+    printArray(arr, len);
+    
+    // calling merge sort
+    mergeSort(arr, 0, len - 1);
+ 
+    printf("\nSorted array: \n");
+    printArray(arr, len);
+    return 0;
 }
